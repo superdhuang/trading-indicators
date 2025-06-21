@@ -1,5 +1,5 @@
 //@version=5
-indicator("TD seq. Setup", "TD Setup", overlay=true, max_labels_count=500)
+indicator("TD seq. Setup", "TD Sequential", overlay=true, max_labels_count=500)
 
 // --- TD Buy Setup (上升趨數計數) ---
 // 條件：當前收盤價 > 4根K線前的收盤價
@@ -22,8 +22,8 @@ if buy_setup_count == 9
         num_to_display = 9 - i
         // 數字9為綠色，1-8為紫紅色
         label_color = num_to_display == 9 ? color.new(color.green, 0) : color.new(color.fuchsia, 0)
-        // 還原：移除標籤背景
-        label.new(bar_index[i], high[i], text=str.tostring(num_to_display), yloc=yloc.price, color=color.new(color.white, 100), style=label.style_none, textcolor=label_color, size=size.normal)
+        // 使用 yloc.price 定位
+        label.new(bar_index[i], high[i], text=str.tostring(num_to_display), yloc=yloc.price, color=color.new(color.white, 100), style=label.style_none, textcolor=label_color, size=size.small)
 
 // 2. 如果最新一根K棒正在計數中(1-8)，則標示出當前的進行中序列
 if barstate.islast and buy_setup_count > 0 and buy_setup_count < 9
@@ -31,8 +31,8 @@ if barstate.islast and buy_setup_count > 0 and buy_setup_count < 9
         num_to_display = buy_setup_count - i
         // 進行中的序列，數字皆為紫紅色
         label_color = color.new(color.fuchsia, 0)
-        // 還原：移除標籤背景
-        label.new(bar_index[i], high[i], text=str.tostring(num_to_display), yloc=yloc.price, color=color.new(color.white, 100), style=label.style_none, textcolor=label_color, size=size.normal)
+        // 使用 yloc.price 定位
+        label.new(bar_index[i], high[i], text=str.tostring(num_to_display), yloc=yloc.price, color=color.new(color.white, 100), style=label.style_none, textcolor=label_color, size=size.small)
 
 
 // --- TD Sell Setup (下降趨勢計數) ---
@@ -56,10 +56,9 @@ if sell_setup_count == 9
         num_to_display = 9 - i
         // 數字9為紫紅色，1-8為綠色
         label_color = num_to_display == 9 ? color.new(color.fuchsia, 0) : color.new(color.green, 0)
-        // 將標籤位置從 low 稍微向下移動以避免重疊
-        y_position = low[i] - ta.tr[i] * 0.5
-        // 還原：移除標籤背景
-        label.new(bar_index[i], y_position, text=str.tostring(num_to_display), yloc=yloc.price, color=color.new(color.white, 100), style=label.style_none, textcolor=label_color, size=size.normal)
+        // 修正：使用 yloc.price 並手動計算 y 座標，以精確控制距離
+        y_position = low[i] - ta.tr[i] * 0.4
+        label.new(bar_index[i], y_position, text=str.tostring(num_to_display), yloc=yloc.price, color=color.new(color.white, 100), style=label.style_none, textcolor=label_color, size=size.small)
 
 // 2. 如果最新一根K棒正在計數中(1-8)，則標示出當前的進行中序列
 if barstate.islast and sell_setup_count > 0 and sell_setup_count < 9
@@ -67,8 +66,7 @@ if barstate.islast and sell_setup_count > 0 and sell_setup_count < 9
         num_to_display = sell_setup_count - i
         // 進行中的序列，數字皆為綠色
         label_color = color.new(color.green, 0)
-        // 將標籤位置從 low 稍微向下移動以避免重疊
-        y_position = low[i] - ta.tr[i] * 0.5
-        // 還原：移除標籤背景
-        label.new(bar_index[i], y_position, text=str.tostring(num_to_display), yloc=yloc.price, color=color.new(color.white, 100), style=label.style_none, textcolor=label_color, size=size.normal)
+        // 修正：使用 yloc.price 並手動計算 y 座標，以精確控制距離
+        y_position = low[i] - ta.tr[i] * 0.4
+        label.new(bar_index[i], y_position, text=str.tostring(num_to_display), yloc=yloc.price, color=color.new(color.white, 100), style=label.style_none, textcolor=label_color, size=size.small)
 
